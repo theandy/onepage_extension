@@ -1,0 +1,23 @@
+{
+    "name": "andreas-loewer/onepage-extension",
+    "type": "typo3-cms-extension",
+    "description": "Create OnePages with TYPO3",
+    "homepage": "https://andreasloewer.de",
+    "license": ["GPL-2.0-or-later"],
+    "keywords": ["TYPO3 CMS"],
+    "require": {
+        "typo3/cms-core": "^12.4",
+        "typo3/cms-rte-ckeditor": "^12.4",
+        "typo3/cms-fluid-styled-content": "^12.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "AndreasLoewer\\OnepageExtension\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "onepage_extension"
+        }
+    }
+}
