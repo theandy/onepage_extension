@@ -5,7 +5,7 @@ defined('TYPO3') or die('Access denied.');
 /**
  * Icon für Doktyp 201: onepage-section
  */
-(call_user_func(function () {
+(function (): void {
     $iconIdentifier = 'onepage-section';
     $iconSource = 'EXT:onepage_extension/Resources/Public/Icons/onepage-section.svg';
 
@@ -14,14 +14,17 @@ defined('TYPO3') or die('Access denied.');
         \TYPO3\CMS\Core\Imaging\IconRegistry::class
     );
 
-    if (!$registry->isRegistered($iconIdentifier)) {
+    // Registrieren (ohne Doppelaufruf)
+    try {
         $registry->registerIcon(
             $iconIdentifier,
             \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
             ['source' => $iconSource]
         );
+    } catch (\Throwable $e) {
+        // Ignorieren, falls bereits registriert
     }
-}))();
+})();
 
 /**
  * PageTS laden
