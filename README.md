@@ -8,75 +8,18 @@ Eine Startseite enthält das Plugin **Onepage Renderer**, das alle Abschnitts-Se
 
 ## Aktueller Stand (Oktober 2025)
 
-### 1. Allgemeines
-- Extension-Key: `onepage_extension`
-- Namespace: `AndreasLoewer\OnepageExtension`
-- Kompatibel mit TYPO3 **12.4**
-- Keine eigenen Datenbanktabellen
-- Redakteure pflegen Inhalte über Seitenstruktur
+- Es wird ein neuer **Doktype 170 – Onepage-Abschnitt** angelegt.  
+  Seiten mit diesem Doktype werden automatisch als Abschnitte in der OnePage-Seite eingebunden.
+- Für alle Seiten mit Doktype 170 steht in der Hauptnavigation ein zusätzliches Feld **`sectionLink`** zur Verfügung, 
+  das auf die jeweilige Sektion (`#anchor`) verweist.
+- Das Rendering erfolgt über das Extbase-Plugin **Onepage Renderer**.
+- Alle Inhalte einer Abschnittsseite werden direkt im Frontend ausgegeben, 
+  unabhängig von Spalten oder Inhaltstypen.
+- Die Extension ist vollständig kompatibel mit TYPO3 12.4.
 
 ---
 
-### 2. Funktionsweise
-
-#### a) Doktype
-- Neuer Doktype: **170 – Onepage-Abschnitt**
-- Registriert in:  
-  `Configuration/TCA/Overrides/pages.php`
-- Icon:  
-  `Resources/Public/Icons/doktype-onepage-section.svg`
-
-#### b) Plugin
-- Name: **Onepage Renderer**
-- Typ: *LIST*-Plugin (`list_type = onepageextension_onepagerenderer`)
-- Registriert in:  
-  - `ext_localconf.php`
-  - `Configuration/TCA/Overrides/tt_content.php`
-- Icon:  
-  `Resources/Public/Icons/ce-onepage-renderer.svg`
-- Wizard-Eintrag im Backend verfügbar
-
-#### c) TypoScript
-- Static Template eingebunden über Include-Sets  
-  (`Configuration/TypoScript/constants.typoscript` und `setup.typoscript`)
-- Setup enthält:
-  - Plugin-ViewPaths
-  - DataProcessor für Abschnitt-Seiten (`doktype=170`)
-  - `lib.onepage_contentByPid` → rendert alle Inhalte der Abschnittsseite
-- Mapping:
-  ```typoscript
-  tt_content.list.20.onepageextension_onepagerenderer = USER
-  tt_content.list.20.onepageextension_onepagerenderer {
-      userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
-      extensionName = OnepageExtension
-      pluginName = OnepageRenderer
-      vendorName = AndreasLoewer
-  }
-  ```
-
-#### d) Controller
-`Classes/Controller/OnepageController.php`
-- Action: `renderAction(): ResponseInterface`
-- Holt alle Abschnitt-Seiten (`doktype=170`) der aktuellen Seite
-- Erzeugt Anchor-ID aus Slug oder Nav-Title
-- Übergibt Seiten + Inhalte an Fluid-Template
-
-#### e) Fluid Template
-`Resources/Private/Templates/Onepage/Render.html`
-- Rendert für jede Abschnitt-Seite:
-  ```html
-  <section id="{section.anchor}">
-      <header><h2>{section.title}</h2></header>
-      <div class="onepage-section-content">
-          <f:cObject typoscriptObjectPath="lib.onepage_contentByPid" data="{pid: section.uid}" />
-      </div>
-  </section>
-  ```
-- Gibt **alle Inhalte** der Abschnitts-Seite aus (Text, Container, Plugins etc.)
-
----
-
-### 3. Redaktions-Workflow
+### Redaktions-Workflow
 
 1. **Startseite:**  
    Enthält das Inhaltselement **„Onepage Renderer“** (Plugin).
@@ -91,24 +34,64 @@ Eine Startseite enthält das Plugin **Onepage Renderer**, das alle Abschnitts-Se
 4. **Ankerbildung:**  
    Automatisch aus `slug` (Fallback: `nav_title` oder `title`).
 
----
-
-### 4. Dateien
-
-| Datei | Funktion |
-|-------|-----------|
-| `ext_localconf.php` | Plugin-Registrierung |
-| `ext_tables.php` | Static Template + Icon |
-| `Configuration/TCA/Overrides/pages.php` | Doktype-Definition |
-| `Configuration/TCA/Overrides/tt_content.php` | Plugin-TCA + Wizard |
-| `Configuration/TypoScript/setup.typoscript` | Rendering-Logik |
-| `Classes/Controller/OnepageController.php` | Hauptlogik |
-| `Resources/Private/Templates/Onepage/Render.html` | Ausgabe-Template |
-| `Resources/Public/Icons/*` | Icons |
+5. **Navigation:**  
+   Bei Seiten mit Doktype 170 wird in der Navigation automatisch das Feld `sectionLink` erzeugt.  
+   Dieses enthält den passenden Anker-Link (z. B. `#ueber-uns`) und steht auf gleicher Ebene wie `title`, `link`, `target`, etc.
 
 ---
 
-### 5. Installation
+### Technische Komponenten
+
+#### Plugin
+- Name: **Onepage Renderer**
+- Typ: *LIST*-Plugin (`list_type = onepageextension_onepagerenderer`)
+- Icon:  
+  `Resources/Public/Icons/ce-onepage-renderer.svg`
+- Wizard-Eintrag im Backend verfügbar
+
+#### TypoScript
+- Static Template eingebunden über Include-Sets  
+  (`Configuration/TypoScript/constants.typoscript` und `setup.typoscript`)
+- Enthält:
+  - Plugin-ViewPaths
+  - DataProcessor für Abschnitt-Seiten (`doktype=170`)
+  - `lib.onepage_contentByPid` → rendert alle Inhalte der Abschnittsseite
+  - `lib.onepage_renderContentByUid` → rendert Inhaltselemente nach UID
+
+#### Controller
+`Classes/Controller/OnepageController.php`
+- Action: `renderAction(): ResponseInterface`
+- Holt alle Abschnitt-Seiten (`doktype=170`) der aktuellen Seite
+- Erzeugt Anker aus Slug oder Nav-Title
+- Übergibt Daten an Fluid
+
+#### Fluid Template
+`Resources/Private/Templates/Onepage/Render.html`
+- Rendert für jede Abschnitt-Seite:
+  ```html
+  <section id="{section.anchor}">
+      <header><h2>{section.title}</h2></header>
+      <div class="onepage-section-content">
+          <f:cObject typoscriptObjectPath="lib.onepage_contentByPid" data="{pid: section.uid}" />
+      </div>
+  </section>
+  ```
+- Gibt **alle Inhalte** der Abschnitts-Seite aus (Text, Container, Plugins etc.)
+
+#### Navigation
+`Classes/DataProcessing/OnepageAnchorProcessor.php`
+- Prüft alle Menüeinträge.
+- Wenn `doktype=170`, wird automatisch ein `sectionLink` (z. B. `#kontakt`) erzeugt.  
+  Dieser steht in `{mainnavigationItem.sectionLink}` und kann direkt verwendet werden:
+  ```html
+  <a href="{mainnavigationItem.sectionLink ?? mainnavigationItem.link}">
+      {mainnavigationItem.title}
+  </a>
+  ```
+
+---
+
+### Installation
 
 1. Extension installieren oder ins `typo3conf/ext/` legen.  
 2. Im Template-Modul das Static Template **„Onepage Extension“** einbinden.  
@@ -119,7 +102,7 @@ Eine Startseite enthält das Plugin **Onepage Renderer**, das alle Abschnitts-Se
 
 ---
 
-### 6. Nächste Schritte
+### Nächste Schritte
 
 - Optional: Navigation/Scroll-Menü über Anchors generieren  
 - Optional: Smooth-Scroll JS hinzufügen  
