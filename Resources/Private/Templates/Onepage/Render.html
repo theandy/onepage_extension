@@ -16,11 +16,14 @@ v5
                 </header>
 
                 <pre>
-                    uid: {uid}
+                    section.uid: {section.uid}
                 </pre>
 
                 <div class="onepage-section-content">
                     <f:for each="{section.contentUids}" as="uid">
+                        <pre>
+                            uid: {uid}
+                        </pre>
                         <f:cObject typoscriptObjectPath="lib.onepage_renderContentByUid" data="{uid: uid}" />
                     </f:for>
                 </div>
