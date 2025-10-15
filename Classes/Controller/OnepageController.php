@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace AndreasLoewer\OnepageExtension\Controller;
 
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 
 final class OnepageController extends ActionController
 {
-    public function renderAction(): void
+    public function renderAction(): ResponseInterface
     {
         $settings = $this->settings ?? [];
         $anchorFrom = $settings['anchorFrom'] ?? 'slug';
@@ -25,6 +26,8 @@ final class OnepageController extends ActionController
                 'renderColumn' => $renderColumn,
             ],
         ]);
+
+        return $this->htmlResponse();
     }
 
     /**
