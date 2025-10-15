@@ -8,7 +8,7 @@ call_user_func(function () {
     $iconId = 'onepage-section';
 
 
-// Auswahl im Feld "Seitentyp" ergänzen (direkter TCA-Zugriff)
+// Auswahl im Feld "Seitentyp" ergänzen (direkt, ohne EMU)
     $GLOBALS['TCA']['pages']['columns']['doktype']['config']['items'][] = [
         $label,
         $doktype,
