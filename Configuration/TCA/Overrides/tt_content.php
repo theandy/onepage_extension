@@ -11,31 +11,36 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 (static function (): void {
     // 1) Plugin registrieren
     ExtensionUtility::registerPlugin(
-        'OnepageExtension',                 // Extension-Name (ohne Vendor)
-        'OnepageRenderer',                  // Plugin-Name (UpperCamelCase)
-        'Onepage Renderer',                 // Label im Backend
-        'content-onepage-renderer'          // Icon-Identifier (optional)
+        'OnepageExtension',
+        'OnepageRenderer',
+        'Onepage Renderer',
+        'content-onepage-renderer'
     );
 
-    // 2) Plugin-Signatur nach Doku bilden
+    // 2) Plugin-Signatur gemäß Doku
     $extensionName = 'OnepageExtension';
     $pluginName = 'OnepageRenderer';
     $pluginSignature = strtolower(preg_replace('/[^a-z0-9]/i', '', $extensionName))
         . '_' . strtolower(preg_replace('/[^a-z0-9]/i', '', $pluginName));
 
-    // 3) Icon registrieren
+    // 3) Icon
     $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(IconRegistry::class);
     $iconRegistry->registerIcon(
         'content-onepage-renderer',
         SvgIconProvider::class,
         ['source' => 'EXT:onepage_extension/Resources/Public/Icons/ce-onepage-renderer.svg']
     );
-
-    // 4) Icon für list_type
     $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes']['list-' . $pluginSignature]
         = 'content-onepage-renderer';
 
-    // 5) Wizard-Eintrag mit *derselben* Signatur
+    // 4) EXPLIZITEN Select-Eintrag für list_type hinzufügen
+    $GLOBALS['TCA']['tt_content']['columns']['list_type']['config']['items'][] = [
+        'Onepage Renderer',
+        $pluginSignature,
+        'content-onepage-renderer',
+    ];
+
+    // 5) Wizard-Eintrag
     ExtensionManagementUtility::addPageTSConfig(<<<TS
 mod.wizards.newContentElement.wizardItems.plugins {
   elements {
@@ -51,5 +56,9 @@ mod.wizards.newContentElement.wizardItems.plugins {
   }
   show := addToList(onepagerenderer)
 }
-TS);
+TS
+    );
+
+    // 6) Optional: Subtypes-Handling (FlexForm etc.) – derzeit nichts nötig
+    // $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = '';
 })();
