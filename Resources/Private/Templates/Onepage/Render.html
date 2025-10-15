@@ -1,0 +1,26 @@
+{namespace f=TYPO3\CMS\Fluid\ViewHelpers}
+
+<f:section name="Main">
+    <div class="onepage">
+        <f:if condition="{sections}">
+            <f:for each="{sections}" as="section">
+                <section id="{section.anchor}">
+                    <header class="onepage-section-header">
+                        <h2>
+                            <f:if condition="{section.nav_title}">
+                                <f:then>{section.nav_title}</f:then>
+                                <f:else>{section.title}</f:else>
+                            </f:if>
+                        </h2>
+                    </header>
+
+                    <div class="onepage-section-content">
+                        <f:for each="{section.contentUids}" as="contentUid">
+                            <f:cObject typoscriptObjectPath="lib.onepage_renderContentByUid" data="{uid: contentUid}" />
+                        </f:for>
+                    </div>
+                </section>
+            </f:for>
+        </f:if>
+    </div>
+</f:section>

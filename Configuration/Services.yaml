@@ -1,0 +1,18 @@
+# Configuration/Services.yaml
+# TYPO3 12.4 – Autowiring für Controller und CommandHandler
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  AndreasLoewer\OnepageExtension\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Domain/Model/'
+      - '../Classes/Domain/Repository/'
+
+  # Controller explizit öffentlich machen (für Extbase)
+  AndreasLoewer\OnepageExtension\Controller\OnepageController:
+    public: true

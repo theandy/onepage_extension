@@ -1,0 +1,30 @@
+##############################################
+# Onepage-Abschnitt (Doktype 170)
+# Backend-Vereinfachungen für Redakteure
+##############################################
+
+[page["doktype"] == 170]
+
+    # Seitenformular verschlanken
+    TCEFORM.pages {
+        # Felder, die für Abschnitte meist unnötig sind
+        is_siteroot.disabled = 1
+        module.disabled = 1
+        backend_layout.disabled = 1
+        backend_layout_next_level.disabled = 1
+        nav_hide.disabled = 1
+        no_search.disabled = 1
+        urltype.disabled = 1
+        TSconfig.disabled = 1
+    }
+
+    # List-/Weblayout-Optimierungen
+    mod.web_layout {
+        # optional: nur die Standardspalte zeigen
+        # disableAdvanced = 1
+    }
+
+    # Kopierverhalten etwas entschärfen
+    TCEMAIN.table.tt_content.disablePrependAtCopy = 1
+
+[END]

@@ -1,56 +1,9 @@
-######################
-#### DEPENDENCIES ####
-######################
-<INCLUDE_TYPOSCRIPT: source="FILE:EXT:fluid_styled_content/Configuration/TypoScript/constants.typoscript">
+########################################################################
+# EXT:onepage_extension – Constants (TYPO3 12.4)
+########################################################################
 
+# Quelle für HTML-Anker je Abschnitt: slug | nav_title | title
+plugin.tx_onepageextension_onepagerenderer.settings.anchorFrom = slug
 
-##############################
-#### FLUID STYLED CONTENT ####
-##############################
-styles {
-    templates {
-        layoutRootPath = EXT:onepage_extension/Resources/Private/Layouts/ContentElements/
-        partialRootPath = EXT:onepage_extension/Resources/Private/Partials/ContentElements/
-        templateRootPath = EXT:onepage_extension/Resources/Private/Templates/ContentElements/
-    }
-}
-
-
-############
-### PAGE ###
-############
-page {
-     fluidtemplate {
-        layoutRootPath = EXT:onepage_extension/Resources/Private/Layouts/Page/
-        partialRootPath = EXT:onepage_extension/Resources/Private/Partials/Page/
-        templateRootPath = EXT:onepage_extension/Resources/Private/Templates/Page/
-    }
-    meta {
-        description =
-        author =
-        keywords =
-        viewport = width=device-width, initial-scale=1
-        robots = index,follow
-        apple-mobile-web-app-capable = no
-        compatible = IE=edge
-    }
-    tracking {
-        google {
-            trackingID =
-            anonymizeIp = 1
-        }
-    }
-}
-
-
-##############
-### CONFIG ###
-##############
-config {
-    no_cache = 0
-    removeDefaultJS = 0
-    admPanel = 1
-    prefixLocalAnchors = all
-    headerComment = build by get.typo3.org/sitepackage
-    sendCacheHeaders = 1
-}
+# Inhaltsspalte, die pro Abschnitt gerendert wird (0 = Normalspalte)
+plugin.tx_onepageextension_onepagerenderer.settings.renderColumn = 0
