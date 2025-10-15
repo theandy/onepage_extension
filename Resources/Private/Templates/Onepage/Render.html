@@ -1,34 +1,31 @@
 {namespace f=TYPO3\CMS\Fluid\ViewHelpers}
 <pre>Resources/Private/Templates/Onepage/Render.html</pre>
-v2
-<f:section name="Main">
+v3
 
+<div class="onepage">
 
-    in MAIN!
+    <p>in MAIN!</p>
 
-    <div class="onepage">
+    <f:debug>{_all}</f:debug>
 
-        <f:debug>{_all}</f:debug>
+    <f:if condition="{sections}">
+        <f:for each="{sections}" as="section">
+            <section id="{section.anchor}">
+                <header class="onepage-section-header">
+                    <h2>
+                        <f:if condition="{section.nav_title}">
+                            <f:then>{section.nav_title}</f:then>
+                            <f:else>{section.title}</f:else>
+                        </f:if>
+                    </h2>
+                </header>
 
-        <f:if condition="{sections}">
-            <f:for each="{sections}" as="section">
-                <section id="{section.anchor}">
-                    <header class="onepage-section-header">
-                        <h2>
-                            <f:if condition="{section.nav_title}">
-                                <f:then>{section.nav_title}</f:then>
-                                <f:else>{section.title}</f:else>
-                            </f:if>
-                        </h2>
-                    </header>
-
-                    <div class="onepage-section-content">
-                        <f:for each="{section.contentUids}" as="contentUid">
-                            <f:cObject typoscriptObjectPath="lib.onepage_renderContentByUid" data="{uid: contentUid}" />
-                        </f:for>
-                    </div>
-                </section>
-            </f:for>
-        </f:if>
-    </div>
-</f:section>
+                <div class="onepage-section-content">
+                    <f:for each="{section.contentUids}" as="contentUid">
+                        <f:cObject typoscriptObjectPath="lib.onepage_renderContentByUid" data="{uid: contentUid}" />
+                    </f:for>
+                </div>
+            </section>
+        </f:for>
+    </f:if>
+</div>
