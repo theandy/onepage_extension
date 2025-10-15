@@ -1,6 +1,15 @@
 ########################################################################
-# EXT:onepage_extension – Setup (TYPO3 12.4, ohne HMENU)
+# EXT:onepage_extension – Setup (TYPO3 12.4, DataProcessing)
 ########################################################################
+
+# Mapping für LIST-Plugin (list_type = onepageextension_onepagerenderer)
+tt_content.list.20.onepageextension_onepagerenderer = USER
+tt_content.list.20.onepageextension_onepagerenderer {
+    userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+    extensionName = OnepageExtension
+    pluginName = OnepageRenderer
+    vendorName = AndreasLoewer
+}
 
 plugin.tx_onepageextension_onepagerenderer {
     view {
@@ -16,15 +25,11 @@ plugin.tx_onepageextension_onepagerenderer {
     }
 
     settings {
-        # Anker-Quelle: slug | nav_title | title
         anchorFrom = slug
-        # Nur Inhalte aus dieser Spalte rendern (0 = Normal)
         renderColumn = 0
     }
 
-    # DataProcessing:
-    # 1) sections: direkte Unterseiten mit Doktype 170
-    # 2) sections[*].contentElements: deren tt_content (colPos gefiltert)
+    # DataProcessing: Abschnittsseiten + deren Inhalte
     dataProcessing {
         10 = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
         10 {
@@ -34,16 +39,13 @@ plugin.tx_onepageextension_onepagerenderer {
             where = doktype=170
             orderBy = sorting
             as = sections
-
             dataProcessing {
                 10 = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
                 10 {
                     table = tt_content
-                    # Aktueller Abschnitt: pid = section.uid
                     pidInList.field = uid
                     orderBy = sorting
                     as = contentElements
-                    # Nur gewünschte Spalte
                     where = colPos={plugin.tx_onepageextension_onepagerenderer.settings.renderColumn}
                     where.insertData = 1
                 }
@@ -52,12 +54,11 @@ plugin.tx_onepageextension_onepagerenderer {
     }
 }
 
-# Fallback-Renderer für einzelne Content-Elemente per uid (optional nutzbar in Fluid)
+# Renderer für einzelne Content-UID (für den Fall, dass Partials das nutzen)
 lib.onepage_renderContentByUid = RECORDS
 lib.onepage_renderContentByUid {
     tables = tt_content
     source.current = 1
     dontCheckPid = 1
-    # Standard-Rendering via tt_content
     conf.tt_content =< tt_content
 }
