@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace AndreasLoewer\OnepageExtension\DataProcessing;
 
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Frontend\DataProcessing\DataProcessorInterface;
+use TYPO3\CMS\Frontend\ContentObject\DataProcessorInterface;
 
 final class OnepageAnchorProcessor implements DataProcessorInterface
 {
@@ -38,7 +38,7 @@ final class OnepageAnchorProcessor implements DataProcessorInterface
                     (string)($page['title'] ?? '')
                 );
 
-                // Auf TOP-Ebene wie title, link, target, current etc.
+                // Top-Level Felder wie title/link/target/current
                 $item['anchor'] = $anchor;
                 $item['sectionLink'] = '#' . $anchor;
                 $item['isOnepageSection'] = true;
