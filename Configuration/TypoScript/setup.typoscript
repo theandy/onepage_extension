@@ -2,7 +2,7 @@
 # OnePage Extension – Grundkonfiguration
 ##############################################
 
-# Alle OnePage-Abschnitte (pages.doktype = 201) laden und rendern
+# Abschnitte (pages.doktype = 201) sammeln und rendern
 lib.onepageContent = COA
 lib.onepageContent {
     10 = CONTENT
@@ -24,15 +24,36 @@ lib.onepageContent {
             20 {
                 table = tt_content
                 select {
-                    where = colPos >= 0
                     pidInList.field = uid
                     orderBy = sorting
                 }
-                renderObj = < tt_content
+                renderObj < tt_content
             }
 
             90 = TEXT
             90.value = </section>
         }
     }
+}
+
+# OnePage-Template nur auf Startseite aktivieren
+[page["uid"] == {$plugin.tx_onepage_extension.startPid}]
+    page = PAGE
+    page {
+        typeNum = 0
+        10 = FLUIDTEMPLATE
+        10 {
+            templateRootPaths.10 = EXT:onepage_extension/Resources/Private/Templates/
+            layoutRootPaths.10   = EXT:onepage_extension/Resources/Private/Layouts/
+            partialRootPaths.10  = EXT:onepage_extension/Resources/Private/Partials/
+            file = EXT:onepage_extension/Resources/Private/Templates/Onepage/Index.html
+        }
+    }
+[end]
+
+# Fallback-Seitentitel
+lib.pageTitle = TEXT
+lib.pageTitle {
+    data = page:title
+    stdWrap.ifEmpty = Website
 }
