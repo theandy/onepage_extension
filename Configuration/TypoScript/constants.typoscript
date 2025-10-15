@@ -1,8 +1,0 @@
-##############################################
-# OnePage Extension – Konstanten
-##############################################
-
-plugin.tx_onepage_extension {
-    # Startpunkt der OnePage-Abschnitte (Seiten-UID)
-    startPid = 1
-}

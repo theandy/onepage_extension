@@ -1,5 +1,0 @@
-##############################################
-# OnePage Extension – PageTS Root
-##############################################
-
-@import 'EXT:onepage_extension/Configuration/TsConfig/Page/OnepageDoktype.tsconfig'
