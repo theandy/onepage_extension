@@ -2,19 +2,13 @@
 defined('TYPO3') or die('Access denied.');
 
 call_user_func(function () {
-    /**
-     * Extension key
-     */
     $extensionKey = 'onepage_extension';
 
-    /**
-     * Neuer Doktyp: OnePage-Section
-     */
+    // Neuer Doktyp
     $doktype = 201;
     $label   = 'OnePage-Section';
-    $iconId  = 'onepage-section'; // Icon in ext_localconf.php registrieren
+    $iconId  = 'onepage-section';
 
-    // Auswahl im Feld "Seitentyp" ergänzen
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTcaSelectItem(
         'pages',
         'doktype',
@@ -27,17 +21,16 @@ call_user_func(function () {
         'after'
     );
 
-    // Icon-Klasse für diesen Doktyp setzen
+    // Icon
     $GLOBALS['TCA']['pages']['ctrl']['typeicon_classes'][$doktype] = $iconId;
 
-    // Feldkonfiguration für den neuen Typ auf Basis des Standard-Typs übernehmen
-    if (isset($GLOBALS['TCA']['pages']['types'][\TYPO3\CMS\Frontend\Page\PageRepository::DOKTYPE_DEFAULT])) {
-        $GLOBALS['TCA']['pages']['types'][$doktype] = $GLOBALS['TCA']['pages']['types'][\TYPO3\CMS\Frontend\Page\PageRepository::DOKTYPE_DEFAULT];
+    // Feldausgabe wie Standard-Seite
+    $defaultTypeConst = \TYPO3\CMS\Core\Domain\Repository\PageRepository::DOKTYPE_DEFAULT;
+    if (isset($GLOBALS['TCA']['pages']['types'][$defaultTypeConst])) {
+        $GLOBALS['TCA']['pages']['types'][$doktype] = $GLOBALS['TCA']['pages']['types'][$defaultTypeConst];
     }
 
-    /**
-     * PageTS registrieren (aus deiner Originaldatei übernommen)
-     */
+    // PageTS registrieren
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::registerPageTSConfigFile(
         $extensionKey,
         'Configuration/TsConfig/Page/All.tsconfig',
