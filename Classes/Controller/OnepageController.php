@@ -14,26 +14,22 @@ final class OnepageController extends ActionController
     {
         $settings = $this->settings ?? [];
         $anchorFrom = $settings['anchorFrom'] ?? 'slug';
-        $renderColumn = (int)($settings['renderColumn'] ?? 0);
 
         $pageId = (int)($GLOBALS['TSFE']->id ?? 0);
-        $sections = $this->fetchSections($pageId, 170, $anchorFrom, $renderColumn);
+        $sections = $this->fetchSections($pageId, 170, $anchorFrom);
 
         $this->view->assignMultiple([
             'sections' => $sections,
-            'settings' => [
-                'anchorFrom' => $anchorFrom,
-                'renderColumn' => $renderColumn,
-            ],
+            'settings' => ['anchorFrom' => $anchorFrom],
         ]);
 
         return $this->htmlResponse();
     }
 
     /**
-     * @return array<int, array{uid:int,title:string,nav_title:string|null,slug:string|null,anchor:string,contentUids:int[]}>
+     * @return array<int, array{uid:int,title:string,nav_title:?string,slug:?string,anchor:string,contentUids:int[]}>
      */
-    private function fetchSections(int $pid, int $doktype, string $anchorFrom, int $renderColumn): array
+    private function fetchSections(int $pid, int $doktype, string $anchorFrom): array
     {
         $qb = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
         $rows = $qb
@@ -56,7 +52,8 @@ final class OnepageController extends ActionController
                 'nav_title' => $row['nav_title'] !== null ? (string)$row['nav_title'] : null,
                 'slug' => $row['slug'] !== null ? (string)$row['slug'] : null,
                 'anchor' => $this->buildAnchor($row, $anchorFrom),
-                'contentUids' => $this->fetchContentUids($uid, $renderColumn),
+                // Alle Inhalte der Seite, ohne colPos-Filter
+                'contentUids' => $this->fetchContentUids($uid),
             ];
         }
         return $sections;
@@ -89,20 +86,19 @@ final class OnepageController extends ActionController
     /**
      * @return int[]
      */
-    private function fetchContentUids(int $pid, int $renderColumn): array
+    private function fetchContentUids(int $pid): array
     {
         $qb = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-        $rows = $qb
+        $uids = $qb
             ->select('uid')
             ->from('tt_content')
             ->where(
-                $qb->expr()->eq('pid', $qb->createNamedParameter($pid, \PDO::PARAM_INT)),
-                $qb->expr()->eq('colPos', $qb->createNamedParameter($renderColumn, \PDO::PARAM_INT))
+                $qb->expr()->eq('pid', $qb->createNamedParameter($pid, \PDO::PARAM_INT))
             )
             ->orderBy('sorting', 'ASC')
             ->executeQuery()
             ->fetchFirstColumn();
 
-        return array_map('intval', $rows ?: []);
+        return array_map('intval', $uids ?: []);
     }
 }

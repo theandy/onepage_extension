@@ -1,8 +1,6 @@
 {namespace f=TYPO3\CMS\Fluid\ViewHelpers}
 <pre>Resources/Private/Templates/Onepage/Render.html</pre>
-v4
-
-<f:debug>{_all}</f:debug>
+v5
 
 <div class="onepage">
     <f:if condition="{sections}">
@@ -17,12 +15,10 @@ v4
                     </h2>
                 </header>
 
-                <div class="debug">
-                    section.uid: {section.uid}
-                </div>
-
                 <div class="onepage-section-content">
-                    <f:cObject typoscriptObjectPath="lib.onepage_contentByPid" data="{pid: section.uid}" />
+                    <f:for each="{section.contentUids}" as="uid">
+                        <f:cObject typoscriptObjectPath="lib.onepage_renderContentByUid" data="{uid: uid}" />
+                    </f:for>
                 </div>
             </section>
         </f:for>
