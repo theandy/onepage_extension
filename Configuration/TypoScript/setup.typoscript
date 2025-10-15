@@ -55,21 +55,10 @@ lib.onepage_contentByPid {
     renderObj < tt_content
 }
 
+
+
 lib.onepage_renderContentByUid = CONTENT
 lib.onepage_renderContentByUid {
-    table = tt_content
-    select {
-        uidInList = {data.uid}
-        uidInList.insertData = 1
-        pidInList = 0
-        # optional:
-        # languageField = sys_language_uid
-    }
-    renderObj =< tt_content
-}
-
-lib.onepage_renderContentByUid2 = CONTENT
-lib.onepage_renderContentByUid2 {
     table = tt_content
     select {
         uidInList = {field:uid}
