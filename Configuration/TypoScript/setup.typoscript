@@ -1,5 +1,5 @@
 ########################################################################
-# EXT:onepage_extension – Setup (TYPO3 12.4, DataProcessing)
+# EXT:onepage_extension – Setup (TYPO3 12.4)
 ########################################################################
 
 # Mapping für LIST-Plugin (list_type = onepageextension_onepagerenderer)
@@ -29,7 +29,7 @@ plugin.tx_onepageextension_onepagerenderer {
         renderColumn = 0
     }
 
-    # DataProcessing: Abschnittsseiten + deren Inhalte
+    # Abschnitte ermitteln (nur direkte Kinder, doktype=170)
     dataProcessing {
         10 = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
         10 {
@@ -39,26 +39,17 @@ plugin.tx_onepageextension_onepagerenderer {
             where = doktype=170
             orderBy = sorting
             as = sections
-            dataProcessing {
-                10 = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
-                10 {
-                    table = tt_content
-                    pidInList.field = uid
-                    orderBy = sorting
-                    as = contentElements
-                    where = colPos={plugin.tx_onepageextension_onepagerenderer.settings.renderColumn}
-                    where.insertData = 1
-                }
-            }
         }
     }
 }
 
-# Renderer für einzelne Content-UID (für den Fall, dass Partials das nutzen)
-lib.onepage_renderContentByUid = RECORDS
-lib.onepage_renderContentByUid {
-    tables = tt_content
-    source.current = 1
-    dontCheckPid = 1
-    conf.tt_content =< tt_content
+# Rendert *alle* Inhaltselemente einer Seite (ohne colPos-Filter)
+lib.onepage_contentByPid = CONTENT
+lib.onepage_contentByPid {
+    table = tt_content
+    select {
+        pidInList.data = data:pid
+        orderBy = sorting
+    }
+    renderObj < tt_content
 }
