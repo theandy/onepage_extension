@@ -29,7 +29,6 @@ plugin.tx_onepageextension_onepagerenderer {
         renderColumn = 0
     }
 
-    # Abschnitte ermitteln (nur direkte Kinder, doktype=170)
     dataProcessing {
         10 = TYPO3\CMS\Frontend\DataProcessing\DatabaseQueryProcessor
         10 {
@@ -48,7 +47,8 @@ lib.onepage_contentByPid = CONTENT
 lib.onepage_contentByPid {
     table = tt_content
     select {
-        pidInList.data = data:pid
+        pidInList = {data.pid}
+        pidInList.insertData = 1
         orderBy = sorting
     }
     renderObj < tt_content
