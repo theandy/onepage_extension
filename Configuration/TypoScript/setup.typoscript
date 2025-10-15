@@ -53,3 +53,11 @@ lib.onepage_contentByPid {
     }
     renderObj < tt_content
 }
+
+lib.onepage_renderContentByUid = RECORDS
+lib.onepage_renderContentByUid {
+    tables = tt_content
+    source.current = 1
+    dontCheckPid = 1
+    conf.tt_content =< tt_content
+}
