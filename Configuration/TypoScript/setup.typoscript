@@ -51,6 +51,7 @@ lib.onepage_contentByPid {
         pidInList.insertData = 1
         orderBy = sorting
     }
+
     renderObj < tt_content
 }
 

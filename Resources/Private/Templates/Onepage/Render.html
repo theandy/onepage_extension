@@ -15,6 +15,10 @@ v5
                     </h2>
                 </header>
 
+                <pre>
+                    uid: {uid}
+                </pre>
+
                 <div class="onepage-section-content">
                     <f:for each="{section.contentUids}" as="uid">
                         <f:cObject typoscriptObjectPath="lib.onepage_renderContentByUid" data="{uid: uid}" />
