@@ -29,18 +29,18 @@ final class OnepageAnchorProcessor implements DataProcessorInterface
     private function apply(array $items, int $doktype, string $field): array
     {
         foreach ($items as &$item) {
-            $pageRow = $item['data'] ?? [];
+            $page = $item['data'] ?? [];
 
-            if ((int)($pageRow['doktype'] ?? 0) === $doktype) {
+            if ((int)($page['doktype'] ?? 0) === $doktype) {
                 $anchor = $this->buildAnchor(
-                    (string)($pageRow[$field] ?? ''),
-                    (string)($pageRow['nav_title'] ?? ''),
-                    (string)($pageRow['title'] ?? '')
+                    (string)($page[$field] ?? ''),
+                    (string)($page['nav_title'] ?? ''),
+                    (string)($page['title'] ?? '')
                 );
 
-                // Neue Felder auf Top-Ebene:
+                // Auf TOP-Ebene wie title, link, target, current etc.
                 $item['anchor'] = $anchor;
-                $item['sectionLink'] = '#' . $anchor;   // zusätzlicher Link für OnePage
+                $item['sectionLink'] = '#' . $anchor;
                 $item['isOnepageSection'] = true;
             }
 

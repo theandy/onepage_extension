@@ -71,3 +71,13 @@ lib.onepage_renderContentByUid {
 }
 
 
+page.10.dataProcessing {
+
+
+    2010 = AndreasLoewer\OnepageExtension\DataProcessing\OnepageAnchorProcessor
+    2010 {
+        menuVariable = mainnavigation
+        doktype = 170
+        anchorField = slug
+    }
+}
